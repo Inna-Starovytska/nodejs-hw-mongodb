@@ -22,7 +22,7 @@ export const setupServer = () => {
 
     app.use(errorHandler);
 
-    const port = Number(env("PORT", 3002));
+    const port = Number(env("PORT", 3001));
 
     app.listen(port, () => console.log(`Server is running on ${port} PORT`));
     
