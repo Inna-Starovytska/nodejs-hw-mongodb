@@ -11,6 +11,9 @@ export const setupServer = () => {
     const app = express();
 
     app.use(cors());
+    
+    app.use(express.json());
+
     app.use(logger);
 
     app.use("/contacts", contactsRouter);
@@ -19,7 +22,7 @@ export const setupServer = () => {
 
     app.use(errorHandler);
 
-    const port = Number(env("PORT", 3001));
+    const port = Number(env("PORT", 3002));
 
     app.listen(port, () => console.log(`Server is running on ${port} PORT`));
     
