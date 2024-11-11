@@ -7,12 +7,13 @@ import { sortByList } from '../db/models/Contact.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-export const getContactsController = async (req, res, next) => {
+export const getContactsController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
     const filter = parseFilterParams(req.query);
+    console.log(filter);
 
-        const data = await contactServices.getContacts(page, perPage, sortBy, sortOrder, filter);
+    const data = await contactServices.getContacts({ page, perPage, sortBy, sortOrder, filter });
         res.json({
             status: 200,
             message: "Successfully found contacts!",
@@ -21,8 +22,7 @@ export const getContactsController = async (req, res, next) => {
 };
 
 
-export const getContactsByIdController = async (req, res,) => {
-   
+export const getContactsByIdController = async (req, res) => {
         const { id } = req.params;
     const data = await contactServices.getContactById(id);
 
@@ -80,16 +80,10 @@ export const patchContactsController = async (req, res) => {
 
 export const deleteContactsController = async (req, res) => {
     const { id: _id } = req.params;
-
     const data = await contactServices.deleteContact({ _id });
-
     if (!data) {
         throw createHttpError(404, `Contact not found`);
     };
-    res.status(204).json({
-        status: 204,
-        data,
-        message: "Contact delete successfully"
-    });
+    res.status(204).send();
 };
 
