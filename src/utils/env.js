@@ -6,5 +6,5 @@ export const env = (name, defaultValue) => {
   if (value) return value;
   if (defaultValue) return defaultValue;
 
-  throw new Error(`Missing procced.env[${name}]`);
+  throw new Error(`Missing procced.env[CLOUDINARY_CLOUD_NAME]`);
 }; 
