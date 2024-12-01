@@ -1,10 +1,13 @@
 import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const env = (name, defaultValue) => {
   const value = process.env[name];
 
   if (value) return value;
+
   if (defaultValue) return defaultValue;
 
-  throw new Error(`Missing procced.env[CLOUDINARY_CLOUD_NAME]`);
-}; 
+  throw new Error(`Missing process.env[${name}]`);
+};
