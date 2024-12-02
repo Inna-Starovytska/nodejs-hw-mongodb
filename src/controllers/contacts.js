@@ -10,13 +10,13 @@ export const getContactsController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
     const filter = parseFilterParams(req.query);
-    console.log(filter);
+    // console.log(filter);
 
-    const data = await contactServices.getContacts({ page, perPage, sortBy, sortOrder, filter });
+    const contacts = await contactServices.getContacts({ page, perPage,  }); sortBy, sortOrder, filter
         res.json({
             status: 200,
             message: "Successfully found contacts!",
-            data,
+            data: contacts,
         });  
 };
 
@@ -77,11 +77,11 @@ export const patchContactsController = async (req, res) => {
     });
 };
 
-export const deleteContactController = async (req, res, next) => {
-  const { contactId } = req.params;
-  const contact = await contactServices.deleteContact(contactId, req.user.id);
-  if (!contact) {
-    next(createHttpError(404, "Contact not found"));
-  }
-  res.status(204).send();
+export const deleteContactsController = async (req, res) => {
+    const { id: _id } = req.params;
+    const data = await contactServices.deleteContact({ _id });
+    if (!data) {
+        throw createHttpError(404, `Contact not found`);
+    };
+    res.status(204).send();
 };

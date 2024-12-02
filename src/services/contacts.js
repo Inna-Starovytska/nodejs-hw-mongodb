@@ -9,9 +9,11 @@ export const getContacts = async ({
   sortOrder = "asc",
   filter = {}
 }) => {
+
   const skip = (page - 1) * perPage;
 
   const contactsQuery = ContactCollection.find();
+
   
   if (filter.contactType) {
     contactsQuery.where("contactType").equals(filter.contactType);
