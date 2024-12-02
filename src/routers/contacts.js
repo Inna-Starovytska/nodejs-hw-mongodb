@@ -1,42 +1,26 @@
 import { Router } from "express";
-import {
-  createContactsController,
-  deleteContactController,
-  getContactsByIdController,
-  getContactsController,
-  patchContactController,
-} from "../controllers/contacts.js";
-import { authenticate } from "../middlewares/authenticate.js";
-import  ctrlWrapper  from "../utils/ctrlWrapper.js";
-import  validateBody  from "../utils/validateBody.js";
-import {
-  createContactShema,
-  patchContactShema,
-} from "../validation/contacts.js";
-
+import * as contactsControllers from "../controllers/contacts.js";
 import { isValidId } from "../middlewares/isValidId.js";
 
-const router = Router();
+import ctrlWrapper  from "../utils/ctrlWrapper.js";
+import validateBody from "../utils/validateBody.js";
+import { contactAddSchema } from "../validation/contacts.js";
+import { contactUpdateSchema } from "../validation/contacts.js";
 
-router.use(authenticate);
+const contactsRouter = Router();
 
-router.get("/", ctrlWrapper(getContactsController));
+contactsRouter.get("/", ctrlWrapper(contactsControllers.getContactsController ));
+    
+contactsRouter.get('/:id', isValidId, ctrlWrapper(contactsControllers.getContactsByIdController));
 
-router.get("/:contactId", isValidId, ctrlWrapper(getContactsByIdController));
+contactsRouter.post("/", validateBody(contactAddSchema), ctrlWrapper(contactsControllers.addContactsController));
 
-router.post(
-  "/",
-  validateBody(createContactShema),
-  ctrlWrapper(createContactsController),
-);
+contactsRouter.put("/:id", isValidId, validateBody(contactAddSchema), ctrlWrapper(contactsControllers.upsertContactsController));
 
-router.patch(
-  "/:contactId",
-  isValidId,
-  validateBody(patchContactShema),
-  ctrlWrapper(patchContactController),
-);
+contactsRouter.patch("/:id", isValidId, validateBody(contactUpdateSchema), ctrlWrapper(contactsControllers.patchContactsController));
 
-router.delete("/:contactId", ctrlWrapper(deleteContactController));
+contactsRouter.delete("/:id", isValidId,  ctrlWrapper(contactsControllers.deleteContactsController));
 
-export default router;
+
+
+export default contactsRouter;
