@@ -11,15 +11,15 @@ const contactsRouter = Router();
 
 contactsRouter.get("/", ctrlWrapper(contactsControllers.getContactsController ));
     
-contactsRouter.get('/:id', isValidId, ctrlWrapper(contactsControllers.getContactsByIdController));
+contactsRouter.get('/:contactId', isValidId, ctrlWrapper(contactsControllers.getContactsByIdController));
 
 contactsRouter.post("/", validateBody(contactAddSchema), ctrlWrapper(contactsControllers.addContactsController));
 
-contactsRouter.put("/:id", isValidId, validateBody(contactAddSchema), ctrlWrapper(contactsControllers.upsertContactsController));
+contactsRouter.put("/:contactId", isValidId, validateBody(contactAddSchema), ctrlWrapper(contactsControllers.upsertContactsController));
 
-contactsRouter.patch("/:id", isValidId, validateBody(contactUpdateSchema), ctrlWrapper(contactsControllers.patchContactsController));
+contactsRouter.patch("/:contactId", isValidId, validateBody(contactUpdateSchema), ctrlWrapper(contactsControllers.patchContactsController));
 
-contactsRouter.delete("/:id", isValidId,  ctrlWrapper(contactsControllers.deleteContactsController));
+contactsRouter.delete("/:contactId", isValidId,  ctrlWrapper(contactsControllers.deleteContactsController));
 
 
 
