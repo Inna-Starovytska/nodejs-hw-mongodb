@@ -28,6 +28,7 @@ export const register = async (payload) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+
   return UserCollection.create({ ...payload, password: hashPassword });
 };
 
@@ -63,7 +64,7 @@ export const refreshUserSession = async ({ refreshToken, sessionId }) => {
     throw createHttpError(401, "Session token expired");
   }
 
-  await SessionCollection.deleteOne({ userId: session.userId });
+  await SessionCollection.deleteOne({  _id: session._id });
 
   const newSession = createSession();
 

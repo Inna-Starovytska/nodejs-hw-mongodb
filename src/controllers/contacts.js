@@ -11,7 +11,8 @@ export const getContactsController = async (req, res) => {
     const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
     const filter = parseFilterParams(req.query);
     const { _id: userId } = req.user;
-  filter.userId = userId;
+      filter.userId = userId;
+   
 
     const contacts = await contactServices.getContacts({ page, perPage, sortBy, sortOrder, filter }); 
         res.json({
@@ -41,12 +42,12 @@ export const getContactsByIdController = async (req, res) => {
 
 export const addContactsController = async (req, res) => {
      const { _id: userId } = req.user;
-    const data = await contactServices.addContact({ ...req.body, userId });
+    const contact = await contactServices.addContact({ ...req.body, userId });
 
     res.status(201).json({
         status: 201,
         message: "Successfully created a contact!",
-        data,
+        data: contact,
     });
 };
 
@@ -66,7 +67,8 @@ export const upsertContactsController = async (req, res) => {
     });
 };
 export const patchContactsController = async (req, res) => {
-    const { id:_id  } = req.params;
+    const { id: _id } = req.params;
+    
     const result = await contactServices.updateContact({ _id, payload: req.body } );
     
     if (!result) {
@@ -80,10 +82,11 @@ export const patchContactsController = async (req, res) => {
 };
 
 export const deleteContactsController = async (req, res) => {
-    const { id: _id } = req.params;
-    const data = await contactServices.deleteContact({_id});
-    if (!data) {
+     const { contactId } = req.params;
+    const contact = await contactServices.deleteContact(contactId, req.user.id);
+    if (!contact) {
         throw createHttpError(404, `Contact not found`);
     };
     res.status(204).send();
 };
+

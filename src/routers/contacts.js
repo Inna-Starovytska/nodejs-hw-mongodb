@@ -6,8 +6,10 @@ import ctrlWrapper  from "../utils/ctrlWrapper.js";
 import validateBody from "../utils/validateBody.js";
 import { contactAddSchema } from "../validation/contacts.js";
 import { contactUpdateSchema } from "../validation/contacts.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const contactsRouter = Router();
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", ctrlWrapper(contactsControllers.getContactsController ));
     
