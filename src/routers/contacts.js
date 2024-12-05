@@ -2,8 +2,8 @@ import { Router } from "express";
 import * as contactsControllers from "../controllers/contacts.js";
 import { isValidId } from "../middlewares/isValidId.js";
 
-import ctrlWrapper  from "../utils/ctrlWrapper.js";
-import validateBody from "../utils/validateBody.js";
+import { ctrlWrapper }  from "../utils/ctrlWrapper.js";
+import { validateBody } from "../utils/validateBody.js";
 import { contactAddSchema } from "../validation/contacts.js";
 import { contactUpdateSchema } from "../validation/contacts.js";
 import { authenticate } from "../middlewares/authenticate.js";
@@ -19,7 +19,7 @@ contactsRouter.post("/", validateBody(contactAddSchema), ctrlWrapper(contactsCon
 
 contactsRouter.put("/:contactId", isValidId, validateBody(contactAddSchema), ctrlWrapper(contactsControllers.upsertContactsController));
 
-contactsRouter.patch("/:contactId", isValidId, validateBody(contactUpdateSchema), ctrlWrapper(contactsControllers.patchContactsController));
+contactsRouter.patch("/:contactId", isValidId, validateBody(contactUpdateSchema), ctrlWrapper(contactsControllers.patchContactController));
 
 contactsRouter.delete("/:contactId",  isValidId, ctrlWrapper(contactsControllers.deleteContactsController));
 

@@ -4,6 +4,7 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByList } from '../db/models/Contact.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+// import mongoose from "mongoose";
 
 
 export const getContactsController = async (req, res) => {
@@ -52,12 +53,28 @@ export const addContactsController = async (req, res) => {
     });
 };
 
-export const upsertContactsController = async (req, res,next) => {
+export const upsertContactsController = async (req, res, next) => {
     const { contactId } = req.params;
-  const userId = req.user._id;
+    const userId = req.user._id;
 
     const updatedContact = await contactServices.updateContact(contactId, req.body, userId);
-     if (!updatedContact) {
+    if (!updatedContact) {
+        return next(createHttpError(404, "Contact not found"));
+    }
+
+    res.json({
+        status: 200,
+        message: "Successfully patched a contact!",
+        data: updatedContact,
+    });
+};
+export const patchContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  const userId = req.user._id;
+  
+  const updatedContact = await contactServices.updateContact(contactId, req.body, userId);
+
+  if (!updatedContact) {
     return next(createHttpError(404, "Contact not found"));
   }
 
@@ -66,15 +83,7 @@ export const upsertContactsController = async (req, res,next) => {
     message: "Successfully patched a contact!",
     data: updatedContact,
   });
-    
-    // const status = result.isNew ? 201 : 200;
-    // res.status(status).json({
-    //     status,
-    //     message: "Successfully created a contact!",
-    //     data:result.data,
-    // });
 };
-
 
 export const deleteContactsController = async (req, res) => {
      const { contactId } = req.params;
