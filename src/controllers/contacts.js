@@ -4,6 +4,7 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByList } from '../db/models/Contact.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
 // import mongoose from "mongoose";
 
 
@@ -43,9 +44,12 @@ export const getContactsByIdController = async (req, res) => {
 };
 
 export const addContactsController = async (req, res) => {
-         const { _id: userId } = req.user;
-    const contact = await contactServices.addContact({ ...req.body, userId });
-
+    const { _id: userId } = req.user;
+    let photo = null;
+    if (req.file) {
+    photo = await saveFileToCloudinary(req.file, 'photo');
+    };
+    const contact = await contactServices.addContact({ ...req.body, photo, userId });
     res.status(201).json({
         status: 201,
         message: "Successfully created a contact!",
@@ -56,12 +60,14 @@ export const addContactsController = async (req, res) => {
 export const upsertContactsController = async (req, res, next) => {
     const { contactId } = req.params;
     const userId = req.user._id;
-
-    const updatedContact = await contactServices.updateContact(contactId, req.body, userId);
+let photo = null;
+  if (req.file) {
+    photo = await saveFileToCloudinary(req.file, 'photo');
+  }
+    const updatedContact = await contactServices.updateContact(contactId, photo, req.body, userId);
     if (!updatedContact) {
         return next(createHttpError(404, "Contact not found"));
     }
-
     res.json({
         status: 200,
         message: "Successfully patched a contact!",
@@ -70,9 +76,12 @@ export const upsertContactsController = async (req, res, next) => {
 };
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const userId = req.user._id;
-  
-  const updatedContact = await contactServices.updateContact(contactId, req.body, userId);
+    const userId = req.user._id;
+    let photo = null;
+  if (req.file) {
+    photo = await saveFileToCloudinary(req.file, 'photo');
+    };  
+  const updatedContact = await contactServices.updateContact(contactId, photo, req.body, userId);
 
   if (!updatedContact) {
     return next(createHttpError(404, "Contact not found"));
