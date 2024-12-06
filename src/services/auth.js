@@ -3,10 +3,14 @@ import bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import UserCollection from "../db/models/User.js";
 import SessionCollection from "../db/models/Session.js";
-import {
-  refreshTokenLifetime,
-  accessTokenLifetime,
-} from "../constants/user.js";
+import {  refreshTokenLifetime,   accessTokenLifetime, } from "../constants/user.js";
+import jwt from 'jsonwebtoken';
+import { SMTP } from '../constants/index.js';
+import { env } from '../utils/env.js';
+import { sendEmail } from '../utils/sendMail.js';
+import handlebars from 'handlebars';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString("base64");
@@ -81,4 +85,5 @@ export const logout = async (sessionId) => {
 export const findSession = (filter) => SessionCollection.findOne(filter);
 
 export const findUser = (filter) => UserCollection.findOne(filter);
+
 
