@@ -3,6 +3,7 @@ import * as contactServices from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { sortByList } from '../db/models/Contact.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { sortByList } from '../db/models/Contact.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
 // import mongoose from "mongoose";
@@ -84,7 +85,8 @@ export const patchContactController = async (req, res, next) => {
   const updatedContact = await contactServices.updateContact(contactId, photo, req.body, userId);
 
   if (!updatedContact) {
-    return next(createHttpError(404, "Contact not found"));
+    next(createHttpError(404, "Contact not found"));
+    return;
   }
 
   res.json({
