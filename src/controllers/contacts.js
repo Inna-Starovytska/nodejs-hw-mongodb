@@ -75,16 +75,13 @@ let photo = null;
     });
 };
 export const patchContactController = async (req, res, next) => {
-  // const { contactId } = req.params;
-  // const userId = req.user._id;
+  
   const { id: _id } = req.params;
     let photo = null;
   if (req.file) {
     photo = await saveFileToCloudinary(req.file, 'photo');
     };  
   const result  = await contactServices.updateContact({ _id, photo, payload: req.body });
-  // contactId, photo, req.body, userId
-  // updatedContact
 
   if (!result ) {
     next(createHttpError(404, "Contact not found"));
